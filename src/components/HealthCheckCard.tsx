@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { Smile, Meh, Frown } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
 interface HealthCheckCardProps {
@@ -10,33 +10,40 @@ interface HealthCheckCardProps {
 }
 
 export const HealthCheckCard = ({ title, description, onSelect }: HealthCheckCardProps) => {
-  const [selected, setSelected] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(0);
 
-  const handleSelect = (mood: string) => {
-    setSelected(mood);
+  const handleProgressChange = (value: number) => {
+    setProgress(value);
+    // Map progress value to mood
+    let mood = 'sad';
+    if (value >= 70) {
+      mood = 'happy';
+    } else if (value >= 40) {
+      mood = 'neutral';
+    }
     onSelect(mood);
   };
-
-  const MoodButton = ({ mood, icon: Icon, color }: { mood: string; icon: any; color: string }) => (
-    <button
-      onClick={() => handleSelect(mood)}
-      className={cn(
-        "p-4 rounded-full transition-all duration-200 hover:scale-110",
-        selected === mood ? "ring-2 ring-primary" : ""
-      )}
-    >
-      <Icon className={cn("w-8 h-8", color)} />
-    </button>
-  );
 
   return (
     <Card className="p-6 animate-scale-in">
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-sm text-gray-600 mb-4">{description}</p>
-      <div className="flex justify-center gap-6">
-        <MoodButton mood="happy" icon={Smile} color="text-green-500" />
-        <MoodButton mood="neutral" icon={Meh} color="text-yellow-500" />
-        <MoodButton mood="sad" icon={Frown} color="text-red-500" />
+      <div className="space-y-4">
+        <Progress 
+          value={progress} 
+          className="w-full cursor-pointer" 
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = Math.round((x / rect.width) * 100);
+            handleProgressChange(Math.max(0, Math.min(100, percentage)));
+          }}
+        />
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>Not Great</span>
+          <span>Okay</span>
+          <span>Amazing!</span>
+        </div>
       </div>
     </Card>
   );
