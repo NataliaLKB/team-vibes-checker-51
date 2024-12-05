@@ -37,13 +37,35 @@ const Index = () => {
       const finalResponses = {
         ...responses,
         name: name,
+        timestamp: new Date().toISOString(),
       };
+
+      // Save to localStorage
+      const existingResponses = JSON.parse(localStorage.getItem('healthChecks') || '[]');
+      existingResponses.push(finalResponses);
+      localStorage.setItem('healthChecks', JSON.stringify(existingResponses));
+
       toast({
         title: "Health check submitted!",
         description: `Thank you for participating, ${name}! 🌟`,
       });
-      // Here you would typically send the data to a backend
-      console.log('Responses:', finalResponses);
+      
+      console.log('Saved responses:', finalResponses);
+      
+      // Reset form
+      setName('');
+      setResponses({
+        name: '',
+        morale: '',
+        communication: '',
+        productivity: '',
+      });
+    } else {
+      toast({
+        title: "Incomplete submission",
+        description: "Please provide feedback for all categories.",
+        variant: "destructive",
+      });
     }
   };
 
