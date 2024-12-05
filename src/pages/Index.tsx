@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HealthCheckCard } from '@/components/HealthCheckCard';
 import { Comments } from '@/components/Comments';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [responses, setResponses] = useState({
     name: '',
@@ -51,6 +53,9 @@ const Index = () => {
       });
       
       console.log('Saved responses:', finalResponses);
+      
+      // Navigate to results page
+      navigate('/results', { state: { responses: finalResponses } });
       
       // Reset form
       setName('');
