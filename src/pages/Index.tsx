@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { HealthCheckCard } from '@/components/HealthCheckCard';
 import { Comments } from '@/components/Comments';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
+  const [name, setName] = useState('');
   const [responses, setResponses] = useState({
+    name: '',
     morale: '',
     communication: '',
     productivity: '',
@@ -21,13 +24,26 @@ const Index = () => {
   };
 
   const handleSubmit = () => {
-    if (Object.values(responses).every(r => r)) {
+    if (!name.trim()) {
+      toast({
+        title: "Name required",
+        description: "Please enter your name before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (Object.values(responses).slice(1).every(r => r)) {
+      const finalResponses = {
+        ...responses,
+        name: name,
+      };
       toast({
         title: "Health check submitted!",
-        description: "Thank you for participating! 🌟",
+        description: `Thank you for participating, ${name}! 🌟`,
       });
       // Here you would typically send the data to a backend
-      console.log('Responses:', responses);
+      console.log('Responses:', finalResponses);
     }
   };
 
@@ -40,6 +56,16 @@ const Index = () => {
         </div>
 
         <div className="grid gap-8">
+          <div className="animate-scale-in">
+            <Input
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="max-w-md mx-auto"
+            />
+          </div>
+
           <HealthCheckCard
             title="Team Morale"
             description="How's the team spirit today?"
