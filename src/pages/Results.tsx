@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 
 interface HealthCheck {
   name: string;
@@ -30,16 +31,16 @@ const Results = () => {
     return responseTime > fiveMinutesAgo;
   });
 
-  const getMoodEmoji = (value: string) => {
-    switch (value) {
-      case 'sad':
-        return '😢';
-      case 'neutral':
-        return '😐';
+  const getMoodValue = (mood: string): number => {
+    switch (mood) {
       case 'happy':
-        return '😊';
+        return 100;
+      case 'neutral':
+        return 50;
+      case 'sad':
+        return 20;
       default:
-        return '❓';
+        return 0;
     }
   };
 
@@ -73,20 +74,20 @@ const Results = () => {
               </span>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <h3 className="font-medium mb-2">Team Morale</h3>
-                <p className="text-3xl">{getMoodEmoji(response.morale)}</p>
+            <div className="grid grid-cols-1 gap-6">
+              <div className="space-y-2">
+                <h3 className="font-medium">Team Morale</h3>
+                <Progress value={getMoodValue(response.morale)} className="w-full" />
               </div>
 
-              <div className="text-center">
-                <h3 className="font-medium mb-2">Communication</h3>
-                <p className="text-3xl">{getMoodEmoji(response.communication)}</p>
+              <div className="space-y-2">
+                <h3 className="font-medium">Communication</h3>
+                <Progress value={getMoodValue(response.communication)} className="w-full" />
               </div>
 
-              <div className="text-center">
-                <h3 className="font-medium mb-2">Productivity</h3>
-                <p className="text-3xl">{getMoodEmoji(response.productivity)}</p>
+              <div className="space-y-2">
+                <h3 className="font-medium">Productivity</h3>
+                <Progress value={getMoodValue(response.productivity)} className="w-full" />
               </div>
             </div>
           </div>
