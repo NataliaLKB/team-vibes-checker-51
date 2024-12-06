@@ -6,10 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
+interface HealthCheckResponse {
+  mood: string;
+  value: number;
+}
+
+interface Responses {
+  name: string;
+  morale: HealthCheckResponse;
+  communication: HealthCheckResponse;
+  productivity: HealthCheckResponse;
+}
+
 const Index = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
-  const [responses, setResponses] = useState({
+  const [responses, setResponses] = useState<Responses>({
     name: '',
     morale: { mood: '', value: 0 },
     communication: { mood: '', value: 0 },
