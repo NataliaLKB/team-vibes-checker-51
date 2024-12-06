@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 interface HealthCheckCardProps {
   title: string;
   description: string;
-  onSelect: (mood: string) => void;
+  onSelect: (mood: string, value: number) => void;
 }
 
 export const HealthCheckCard = ({ title, description, onSelect }: HealthCheckCardProps) => {
@@ -21,7 +21,7 @@ export const HealthCheckCard = ({ title, description, onSelect }: HealthCheckCar
     } else if (value >= 40) {
       mood = 'neutral';
     }
-    onSelect(mood);
+    onSelect(mood, value);
   };
 
   return (

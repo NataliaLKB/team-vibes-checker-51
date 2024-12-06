@@ -11,17 +11,17 @@ const Index = () => {
   const [name, setName] = useState('');
   const [responses, setResponses] = useState({
     name: '',
-    morale: '',
-    communication: '',
-    productivity: '',
+    morale: { mood: '', value: 0 },
+    communication: { mood: '', value: 0 },
+    productivity: { mood: '', value: 0 },
   });
   
   const { toast } = useToast();
 
-  const handleResponse = (category: keyof typeof responses, mood: string) => {
+  const handleResponse = (category: 'morale' | 'communication' | 'productivity', mood: string, value: number) => {
     setResponses(prev => ({
       ...prev,
-      [category]: mood
+      [category]: { mood, value }
     }));
   };
 
@@ -35,7 +35,7 @@ const Index = () => {
       return;
     }
 
-    if (Object.values(responses).slice(1).every(r => r)) {
+    if (Object.values(responses).slice(1).every(r => r.mood)) {
       const finalResponses = {
         ...responses,
         name: name,
@@ -61,9 +61,9 @@ const Index = () => {
       setName('');
       setResponses({
         name: '',
-        morale: '',
-        communication: '',
-        productivity: '',
+        morale: { mood: '', value: 0 },
+        communication: { mood: '', value: 0 },
+        productivity: { mood: '', value: 0 },
       });
     } else {
       toast({
@@ -96,19 +96,19 @@ const Index = () => {
           <HealthCheckCard
             title="Team Morale"
             description="How's the team spirit today?"
-            onSelect={(mood) => handleResponse('morale', mood)}
+            onSelect={(mood, value) => handleResponse('morale', mood, value)}
           />
           
           <HealthCheckCard
             title="Communication"
             description="How well are we communicating?"
-            onSelect={(mood) => handleResponse('communication', mood)}
+            onSelect={(mood, value) => handleResponse('communication', mood, value)}
           />
           
           <HealthCheckCard
             title="Productivity"
             description="How productive do you feel?"
-            onSelect={(mood) => handleResponse('productivity', mood)}
+            onSelect={(mood, value) => handleResponse('productivity', mood, value)}
           />
 
           <Comments />

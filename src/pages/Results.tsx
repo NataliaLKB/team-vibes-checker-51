@@ -5,9 +5,9 @@ import { Progress } from '@/components/ui/progress';
 
 interface HealthCheck {
   name: string;
-  morale: string;
-  communication: string;
-  productivity: string;
+  morale: { mood: string; value: number };
+  communication: { mood: string; value: number };
+  productivity: { mood: string; value: number };
   timestamp: string;
 }
 
@@ -30,19 +30,6 @@ const Results = () => {
     const fiveMinutesAgo = new Date().getTime() - 5 * 60 * 1000;
     return responseTime > fiveMinutesAgo;
   });
-
-  const getMoodValue = (mood: string): number => {
-    switch (mood) {
-      case 'happy':
-        return 100;
-      case 'neutral':
-        return 50;
-      case 'sad':
-        return 20;
-      default:
-        return 0;
-    }
-  };
 
   if (!currentResponse && recentResponses.length === 0) {
     return (
@@ -77,17 +64,17 @@ const Results = () => {
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-2">
                 <h3 className="font-medium">Team Morale</h3>
-                <Progress value={getMoodValue(response.morale)} className="w-full" />
+                <Progress value={response.morale.value} className="w-full" />
               </div>
 
               <div className="space-y-2">
                 <h3 className="font-medium">Communication</h3>
-                <Progress value={getMoodValue(response.communication)} className="w-full" />
+                <Progress value={response.communication.value} className="w-full" />
               </div>
 
               <div className="space-y-2">
                 <h3 className="font-medium">Productivity</h3>
-                <Progress value={getMoodValue(response.productivity)} className="w-full" />
+                <Progress value={response.productivity.value} className="w-full" />
               </div>
             </div>
           </div>
