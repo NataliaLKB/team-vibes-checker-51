@@ -55,10 +55,10 @@ const Results = () => {
 
   const handleClearResults = async () => {
     try {
-      // Delete all records from the health_checks table without any conditions
       const { error } = await supabase
         .from('health_checks')
-        .delete();
+        .delete()
+        .gte('timestamp', '2000-01-01'); // This will match all realistic timestamps
 
       if (error) throw error;
 
