@@ -55,11 +55,10 @@ const Results = () => {
 
   const handleClearResults = async () => {
     try {
-      // Delete all records from the health_checks table
+      // Delete all records from the health_checks table without any conditions
       const { error } = await supabase
         .from('health_checks')
-        .delete()
-        .neq('id', 'dummy'); // This will match all records since no ID will equal 'dummy'
+        .delete();
 
       if (error) throw error;
 
