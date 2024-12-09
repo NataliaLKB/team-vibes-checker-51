@@ -35,7 +35,6 @@ const Results = () => {
 
       if (error) throw error;
       
-      // Convert the JSON data back to our HealthCheck type
       const typedData = data?.map(item => ({
         ...item,
         morale: item.morale as unknown as HealthCheckResponse,
@@ -56,10 +55,11 @@ const Results = () => {
 
   const handleClearResults = async () => {
     try {
+      // Delete all records from the health_checks table
       const { error } = await supabase
         .from('health_checks')
         .delete()
-        .not('id', 'is', null); // This deletes all records
+        .neq('id', 'dummy'); // This will match all records since no ID will equal 'dummy'
 
       if (error) throw error;
 
@@ -68,8 +68,8 @@ const Results = () => {
         description: "All health check results have been cleared.",
       });
 
-      // Refresh the data
-      fetchHealthChecks();
+      // Refresh the data immediately
+      setHealthChecks([]);
     } catch (error) {
       console.error('Error clearing health checks:', error);
       toast({
@@ -101,7 +101,7 @@ const Results = () => {
     return () => {
       channel.unsubscribe();
     };
-  }, [toast]);
+  }, []);
 
   if (healthChecks.length === 0) {
     return (
