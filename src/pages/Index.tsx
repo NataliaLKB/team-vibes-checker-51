@@ -4,7 +4,7 @@ import { HealthCheckCard } from '@/components/HealthCheckCard';
 import { Comments } from '@/components/Comments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 interface HealthCheckResponse {
@@ -50,9 +50,10 @@ const Index = () => {
 
     if (Object.values(responses).slice(1).every(r => r.mood)) {
       const finalResponses = {
-        ...responses,
-        name: name,
-        timestamp: new Date().toISOString(),
+        name,
+        morale: responses.morale,
+        communication: responses.communication,
+        productivity: responses.productivity,
       };
 
       try {

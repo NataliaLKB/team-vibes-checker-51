@@ -3,13 +3,19 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
+
+interface HealthCheckResponse {
+  mood: string;
+  value: number;
+}
 
 interface HealthCheck {
+  id: string;
   name: string;
-  morale: { mood: string; value: number };
-  communication: { mood: string; value: number };
-  productivity: { mood: string; value: number };
+  morale: HealthCheckResponse;
+  communication: HealthCheckResponse;
+  productivity: HealthCheckResponse;
   timestamp: string;
 }
 
@@ -17,21 +23,19 @@ const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const currentResponse = location.state?.responses;
-  const [recentResponses, setRecentResponses] = useState<HealthCheck[]>([]);
+  const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([]);
   
   useEffect(() => {
-    const fetchRecentResponses = async () => {
+    const fetchHealthChecks = async () => {
       try {
         const { data, error } = await supabase
           .from('health_checks')
-          .select('*')
+          .select()
           .order('timestamp', { ascending: false })
           .limit(5);
 
         if (error) throw error;
-
-        setRecentResponses(data || []);
+        setHealthChecks(data || []);
       } catch (error) {
         console.error('Error fetching health checks:', error);
         toast({
@@ -42,10 +46,10 @@ const Results = () => {
       }
     };
 
-    fetchRecentResponses();
+    fetchHealthChecks();
 
     // Set up real-time subscription
-    const subscription = supabase
+    const channel = supabase
       .channel('health_checks_changes')
       .on('postgres_changes', 
         { 
@@ -53,19 +57,18 @@ const Results = () => {
           schema: 'public', 
           table: 'health_checks' 
         }, 
-        async () => {
-          // Refetch data when changes occur
-          await fetchRecentResponses();
+        () => {
+          fetchHealthChecks();
         }
       )
       .subscribe();
 
     return () => {
-      subscription.unsubscribe();
+      channel.unsubscribe();
     };
   }, [toast]);
 
-  if (!currentResponse && recentResponses.length === 0) {
+  if (healthChecks.length === 0) {
     return (
       <div className="min-h-screen bg-secondary p-8 text-center">
         <h1 className="text-4xl font-bold mb-4">No Results Found</h1>
@@ -79,36 +82,32 @@ const Results = () => {
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Health Check Results</h1>
-          <p className="text-gray-600">
-            {currentResponse 
-              ? `Thank you for your feedback, ${currentResponse.name}!`
-              : 'Recent submissions from the team'}
-          </p>
+          <p className="text-gray-600">Recent submissions from the team</p>
         </div>
 
-        {recentResponses.map((response, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-fade-in">
+        {healthChecks.map((check) => (
+          <div key={check.id} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-fade-in">
             <div className="flex justify-between items-center border-b pb-4">
-              <h2 className="text-xl font-semibold">{response.name}'s Feedback</h2>
+              <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
               <span className="text-sm text-gray-500">
-                {new Date(response.timestamp).toLocaleTimeString()}
+                {new Date(check.timestamp).toLocaleTimeString()}
               </span>
             </div>
             
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-2">
                 <h3 className="font-medium">Team Morale</h3>
-                <Progress value={response.morale.value} className="w-full" />
+                <Progress value={check.morale.value} className="w-full" />
               </div>
 
               <div className="space-y-2">
                 <h3 className="font-medium">Communication</h3>
-                <Progress value={response.communication.value} className="w-full" />
+                <Progress value={check.communication.value} className="w-full" />
               </div>
 
               <div className="space-y-2">
                 <h3 className="font-medium">Productivity</h3>
-                <Progress value={response.productivity.value} className="w-full" />
+                <Progress value={check.productivity.value} className="w-full" />
               </div>
             </div>
           </div>
