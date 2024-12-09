@@ -18,6 +18,7 @@ interface Responses {
   morale: HealthCheckResponse;
   communication: HealthCheckResponse;
   productivity: HealthCheckResponse;
+  why: string;
 }
 
 const Index = () => {
@@ -28,6 +29,7 @@ const Index = () => {
     morale: { mood: '', value: 0 },
     communication: { mood: '', value: 0 },
     productivity: { mood: '', value: 0 },
+    why: '',
   });
   
   const { toast } = useToast();
@@ -37,6 +39,17 @@ const Index = () => {
       ...prev,
       [category]: { mood, value }
     }));
+  };
+
+  const handleCommentSubmit = (comment: string) => {
+    setResponses(prev => ({
+      ...prev,
+      why: comment
+    }));
+    toast({
+      title: "Comment saved!",
+      description: "Thank you for your input! 🎉",
+    });
   };
 
   const handleSubmit = async () => {
@@ -49,12 +62,13 @@ const Index = () => {
       return;
     }
 
-    if (Object.values(responses).slice(1).every(r => r.mood)) {
+    if (Object.values(responses).slice(1, -1).every(r => r.mood)) {
       const finalResponses = {
         name,
         morale: responses.morale as unknown as Json,
         communication: responses.communication as unknown as Json,
         productivity: responses.productivity as unknown as Json,
+        why: responses.why,
       };
 
       try {
@@ -79,6 +93,7 @@ const Index = () => {
           morale: { mood: '', value: 0 },
           communication: { mood: '', value: 0 },
           productivity: { mood: '', value: 0 },
+          why: '',
         });
       } catch (error) {
         console.error('Error saving health check:', error);
@@ -134,7 +149,7 @@ const Index = () => {
             onSelect={(mood, value) => handleResponse('productivity', mood, value)}
           />
 
-          <Comments />
+          <Comments onCommentSubmit={handleCommentSubmit} />
 
           <div className="text-center">
             <Button 

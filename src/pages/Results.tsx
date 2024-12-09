@@ -16,6 +16,7 @@ interface HealthCheck {
   morale: HealthCheckResponse;
   communication: HealthCheckResponse;
   productivity: HealthCheckResponse;
+  why: string;
   timestamp: string;
 }
 
@@ -152,6 +153,13 @@ const Results = () => {
                 <h3 className="font-medium">Productivity</h3>
                 <Progress value={check.productivity.value} className="w-full" />
               </div>
+
+              {check.why && (
+                <div className="space-y-2">
+                  <h3 className="font-medium">Why?</h3>
+                  <p className="text-gray-600">{check.why}</p>
+                </div>
+              )}
             </div>
           </div>
         ))}
