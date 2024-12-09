@@ -59,7 +59,7 @@ const Results = () => {
       const { error } = await supabase
         .from('health_checks')
         .delete()
-        .gt('id', '0'); // This deletes all records since UUID is always greater than '0'
+        .not('id', 'is', null); // This deletes all records
 
       if (error) throw error;
 
