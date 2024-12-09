@@ -51,9 +51,9 @@ const Index = () => {
     if (Object.values(responses).slice(1).every(r => r.mood)) {
       const finalResponses = {
         name,
-        morale: responses.morale,
-        communication: responses.communication,
-        productivity: responses.productivity,
+        morale: responses.morale as unknown as Json,
+        communication: responses.communication as unknown as Json,
+        productivity: responses.productivity as unknown as Json,
       };
 
       try {

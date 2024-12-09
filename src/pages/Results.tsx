@@ -35,7 +35,16 @@ const Results = () => {
           .limit(5);
 
         if (error) throw error;
-        setHealthChecks(data || []);
+        
+        // Convert the JSON data back to our HealthCheck type
+        const typedData = data?.map(item => ({
+          ...item,
+          morale: item.morale as unknown as HealthCheckResponse,
+          communication: item.communication as unknown as HealthCheckResponse,
+          productivity: item.productivity as unknown as HealthCheckResponse,
+        })) || [];
+        
+        setHealthChecks(typedData);
       } catch (error) {
         console.error('Error fetching health checks:', error);
         toast({
