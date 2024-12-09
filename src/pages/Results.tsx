@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 interface HealthCheck {
   name: string;
@@ -14,22 +16,54 @@ interface HealthCheck {
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const currentResponse = location.state?.responses;
+  const [recentResponses, setRecentResponses] = useState<HealthCheck[]>([]);
   
-  // Get all responses from localStorage
-  const allResponses: HealthCheck[] = JSON.parse(localStorage.getItem('healthChecks') || '[]');
-  
-  // Sort responses by timestamp, most recent first
-  const sortedResponses = [...allResponses].sort((a, b) => 
-    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-  );
+  useEffect(() => {
+    const fetchRecentResponses = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('health_checks')
+          .select('*')
+          .order('timestamp', { ascending: false })
+          .limit(5);
 
-  // Filter responses from the last 5 minutes
-  const recentResponses = sortedResponses.filter(response => {
-    const responseTime = new Date(response.timestamp).getTime();
-    const fiveMinutesAgo = new Date().getTime() - 5 * 60 * 1000;
-    return responseTime > fiveMinutesAgo;
-  });
+        if (error) throw error;
+
+        setRecentResponses(data || []);
+      } catch (error) {
+        console.error('Error fetching health checks:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load recent health checks.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    fetchRecentResponses();
+
+    // Set up real-time subscription
+    const subscription = supabase
+      .channel('health_checks_changes')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'health_checks' 
+        }, 
+        async () => {
+          // Refetch data when changes occur
+          await fetchRecentResponses();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [toast]);
 
   if (!currentResponse && recentResponses.length === 0) {
     return (
@@ -53,7 +87,7 @@ const Results = () => {
         </div>
 
         {recentResponses.map((response, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md space-y-6">
+          <div key={index} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-fade-in">
             <div className="flex justify-between items-center border-b pb-4">
               <h2 className="text-xl font-semibold">{response.name}'s Feedback</h2>
               <span className="text-sm text-gray-500">

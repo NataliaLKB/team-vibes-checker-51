@@ -5,6 +5,7 @@ import { Comments } from '@/components/Comments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface HealthCheckResponse {
   mood: string;
@@ -37,7 +38,7 @@ const Index = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
         title: "Name required",
@@ -54,29 +55,37 @@ const Index = () => {
         timestamp: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const existingResponses = JSON.parse(localStorage.getItem('healthChecks') || '[]');
-      existingResponses.push(finalResponses);
-      localStorage.setItem('healthChecks', JSON.stringify(existingResponses));
+      try {
+        const { error } = await supabase
+          .from('health_checks')
+          .insert([finalResponses]);
 
-      toast({
-        title: "Health check submitted!",
-        description: `Thank you for participating, ${name}! 🌟`,
-      });
-      
-      console.log('Saved responses:', finalResponses);
-      
-      // Navigate to results page
-      navigate('/results', { state: { responses: finalResponses } });
-      
-      // Reset form
-      setName('');
-      setResponses({
-        name: '',
-        morale: { mood: '', value: 0 },
-        communication: { mood: '', value: 0 },
-        productivity: { mood: '', value: 0 },
-      });
+        if (error) throw error;
+
+        toast({
+          title: "Health check submitted!",
+          description: `Thank you for participating, ${name}! 🌟`,
+        });
+        
+        console.log('Saved responses:', finalResponses);
+        
+        navigate('/results', { state: { responses: finalResponses } });
+        
+        setName('');
+        setResponses({
+          name: '',
+          morale: { mood: '', value: 0 },
+          communication: { mood: '', value: 0 },
+          productivity: { mood: '', value: 0 },
+        });
+      } catch (error) {
+        console.error('Error saving health check:', error);
+        toast({
+          title: "Error",
+          description: "Failed to save your health check. Please try again.",
+          variant: "destructive",
+        });
+      }
     } else {
       toast({
         title: "Incomplete submission",
