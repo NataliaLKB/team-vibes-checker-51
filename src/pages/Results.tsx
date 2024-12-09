@@ -25,36 +25,62 @@ const Results = () => {
   const { toast } = useToast();
   const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([]);
   
+  const fetchHealthChecks = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('health_checks')
+        .select()
+        .order('timestamp', { ascending: false })
+        .limit(5);
+
+      if (error) throw error;
+      
+      // Convert the JSON data back to our HealthCheck type
+      const typedData = data?.map(item => ({
+        ...item,
+        morale: item.morale as unknown as HealthCheckResponse,
+        communication: item.communication as unknown as HealthCheckResponse,
+        productivity: item.productivity as unknown as HealthCheckResponse,
+      })) || [];
+      
+      setHealthChecks(typedData);
+    } catch (error) {
+      console.error('Error fetching health checks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load recent health checks.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleClearResults = async () => {
+    try {
+      const { error } = await supabase
+        .from('health_checks')
+        .delete()
+        .neq('id', ''); // This deletes all records
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "All health check results have been cleared.",
+      });
+
+      // Refresh the data
+      fetchHealthChecks();
+    } catch (error) {
+      console.error('Error clearing health checks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to clear health check results.",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
-    const fetchHealthChecks = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('health_checks')
-          .select()
-          .order('timestamp', { ascending: false })
-          .limit(5);
-
-        if (error) throw error;
-        
-        // Convert the JSON data back to our HealthCheck type
-        const typedData = data?.map(item => ({
-          ...item,
-          morale: item.morale as unknown as HealthCheckResponse,
-          communication: item.communication as unknown as HealthCheckResponse,
-          productivity: item.productivity as unknown as HealthCheckResponse,
-        })) || [];
-        
-        setHealthChecks(typedData);
-      } catch (error) {
-        console.error('Error fetching health checks:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load recent health checks.",
-          variant: "destructive",
-        });
-      }
-    };
-
     fetchHealthChecks();
 
     // Set up real-time subscription
@@ -92,6 +118,15 @@ const Results = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Health Check Results</h1>
           <p className="text-gray-600">Recent submissions from the team</p>
+          <div className="mt-4 flex justify-center gap-4">
+            <Button onClick={() => navigate('/')}>Submit Another Response</Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleClearResults}
+            >
+              Clear All Results
+            </Button>
+          </div>
         </div>
 
         {healthChecks.map((check) => (
@@ -121,10 +156,6 @@ const Results = () => {
             </div>
           </div>
         ))}
-
-        <div className="text-center mt-8">
-          <Button onClick={() => navigate('/')}>Submit Another Response</Button>
-        </div>
       </div>
     </div>
   );
