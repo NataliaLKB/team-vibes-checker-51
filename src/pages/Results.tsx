@@ -60,17 +60,17 @@ const Results = () => {
       const { error } = await supabase
         .from('health_checks')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // This will match all records since no ID will equal this value
+        .neq('id', '00000000-0000-0000-0000-000000000000');
 
       if (error) throw error;
 
+      // Immediately clear the local state
+      setHealthChecks([]);
+      
       toast({
         title: "Success",
         description: "All health check results have been cleared.",
       });
-
-      // Refresh the data immediately
-      setHealthChecks([]);
     } catch (error) {
       console.error('Error clearing health checks:', error);
       toast({
@@ -78,6 +78,9 @@ const Results = () => {
         description: "Failed to clear health check results.",
         variant: "destructive",
       });
+      
+      // Refresh the data in case of error to ensure UI is in sync
+      fetchHealthChecks();
     }
   };
 
