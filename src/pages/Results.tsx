@@ -59,8 +59,7 @@ const Results = () => {
     try {
       const { error } = await supabase
         .from('health_checks')
-        .delete()
-        .neq('id', 'none'); // This will match all records since no ID will equal 'none'
+        .delete();
 
       if (error) throw error;
 
