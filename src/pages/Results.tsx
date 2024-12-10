@@ -16,7 +16,7 @@ interface HealthCheck {
   morale: HealthCheckResponse;
   communication: HealthCheckResponse;
   productivity: HealthCheckResponse;
-  why: string;
+  why: string | null;
   timestamp: string;
 }
 
