@@ -55,35 +55,6 @@ const Results = () => {
     }
   };
 
-  const handleClearResults = async () => {
-    try {
-      const { error } = await supabase
-        .from('health_checks')
-        .delete()
-        .gte('timestamp', '2000-01-01'); // This will match all records since it's a date far in the past
-
-      if (error) throw error;
-
-      // Immediately clear the local state
-      setHealthChecks([]);
-      
-      toast({
-        title: "Success",
-        description: "All health check results have been cleared.",
-      });
-    } catch (error) {
-      console.error('Error clearing health checks:', error);
-      toast({
-        title: "Error",
-        description: "Failed to clear health check results.",
-        variant: "destructive",
-      });
-      
-      // Refresh the data in case of error to ensure UI is in sync
-      fetchHealthChecks();
-    }
-  };
-
   useEffect(() => {
     fetchHealthChecks();
 
@@ -122,14 +93,8 @@ const Results = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Health Check Results</h1>
           <p className="text-gray-600">Recent submissions from the team</p>
-          <div className="mt-4 flex justify-center gap-4">
+          <div className="mt-4 flex justify-center">
             <Button onClick={() => navigate('/')}>Submit Another Response</Button>
-            <Button 
-              variant="destructive" 
-              onClick={handleClearResults}
-            >
-              Clear All Results
-            </Button>
           </div>
         </div>
 
