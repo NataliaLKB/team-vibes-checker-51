@@ -57,10 +57,11 @@ const Results = () => {
 
   const handleClearResults = async () => {
     try {
+      // Delete all records without any conditions
       const { error } = await supabase
         .from('health_checks')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .gt('id', '0'); // This will match all records since all UUIDs are greater than '0'
 
       if (error) throw error;
 
