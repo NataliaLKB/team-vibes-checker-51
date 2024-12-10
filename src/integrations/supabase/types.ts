@@ -17,7 +17,6 @@ export type Database = {
           name: string
           productivity: Json
           timestamp: string
-          why: string | null
         }
         Insert: {
           communication: Json
@@ -26,7 +25,6 @@ export type Database = {
           name: string
           productivity: Json
           timestamp?: string
-          why?: string | null
         }
         Update: {
           communication?: Json
@@ -35,7 +33,6 @@ export type Database = {
           name?: string
           productivity?: Json
           timestamp?: string
-          why?: string | null
         }
         Relationships: []
       }
