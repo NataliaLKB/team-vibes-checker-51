@@ -59,7 +59,8 @@ const Results = () => {
     try {
       const { error } = await supabase
         .from('health_checks')
-        .delete();
+        .delete()
+        .gte('timestamp', '2000-01-01'); // This will match all records since it's a date far in the past
 
       if (error) throw error;
 
