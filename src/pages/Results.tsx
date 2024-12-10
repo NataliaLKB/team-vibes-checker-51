@@ -41,6 +41,7 @@ const Results = () => {
         morale: item.morale as unknown as HealthCheckResponse,
         communication: item.communication as unknown as HealthCheckResponse,
         productivity: item.productivity as unknown as HealthCheckResponse,
+        why: item.why || '', // Ensure why field is always present
       })) || [];
       
       setHealthChecks(typedData);
