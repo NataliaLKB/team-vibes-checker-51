@@ -41,7 +41,7 @@ const Results = () => {
         morale: item.morale as unknown as HealthCheckResponse,
         communication: item.communication as unknown as HealthCheckResponse,
         productivity: item.productivity as unknown as HealthCheckResponse,
-        why: item.why || '', // Ensure why field is always present
+        why: item.why || null,
       })) || [];
       
       setHealthChecks(typedData);
@@ -60,7 +60,7 @@ const Results = () => {
       const { error } = await supabase
         .from('health_checks')
         .delete()
-        .gte('timestamp', '2000-01-01'); // This will match all realistic timestamps
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // This will match all records since no ID will equal this value
 
       if (error) throw error;
 
