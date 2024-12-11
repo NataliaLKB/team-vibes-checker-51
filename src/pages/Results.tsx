@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,8 +21,11 @@ interface HealthCheck {
   timestamp: string;
 }
 
+interface GroupedHealthChecks {
+  [date: string]: HealthCheck[];
+}
+
 const Results = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([]);
@@ -65,7 +68,6 @@ const Results = () => {
 
       if (error) throw error;
 
-      // Update local state to remove the deleted record
       setHealthChecks(prevChecks => prevChecks.filter(check => check.id !== id));
       
       toast({
@@ -85,7 +87,6 @@ const Results = () => {
   useEffect(() => {
     fetchHealthChecks();
 
-    // Set up real-time subscription
     const channel = supabase
       .channel('health_checks_changes')
       .on('postgres_changes', 
@@ -105,6 +106,17 @@ const Results = () => {
     };
   }, []);
 
+  const groupHealthChecksByDate = (checks: HealthCheck[]): GroupedHealthChecks => {
+    return checks.reduce((groups: GroupedHealthChecks, check) => {
+      const date = new Date(check.timestamp).toLocaleDateString();
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(check);
+      return groups;
+    }, {});
+  };
+
   if (healthChecks.length === 0) {
     return (
       <div className="min-h-screen bg-secondary p-8 text-center">
@@ -113,6 +125,8 @@ const Results = () => {
       </div>
     );
   }
+
+  const groupedHealthChecks = groupHealthChecksByDate(healthChecks);
 
   return (
     <div className="min-h-screen bg-secondary p-8">
@@ -125,48 +139,53 @@ const Results = () => {
           </div>
         </div>
 
-        {healthChecks.map((check) => (
-          <div key={check.id} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-fade-in">
-            <div className="flex justify-between items-center border-b pb-4">
-              <div className="flex items-center gap-4">
-                <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDeleteRecord(check.id)}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <span className="text-sm text-gray-500">
-                {new Date(check.timestamp).toLocaleTimeString()}
-              </span>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-6">
-              <div className="space-y-2">
-                <h3 className="font-medium">Team Morale</h3>
-                <Progress value={check.morale.value} className="w-full" />
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-medium">Communication</h3>
-                <Progress value={check.communication.value} className="w-full" />
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-medium">Productivity</h3>
-                <Progress value={check.productivity.value} className="w-full" />
-              </div>
-
-              {check.why && (
-                <div className="space-y-2">
-                  <h3 className="font-medium">Why?</h3>
-                  <p className="text-gray-600">{check.why}</p>
+        {Object.entries(groupedHealthChecks).map(([date, checks]) => (
+          <div key={date} className="space-y-4">
+            <h2 className="text-2xl font-semibold text-gray-700">{date}</h2>
+            {checks.map((check) => (
+              <div key={check.id} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in">
+                <div className="flex justify-between items-center border-b pb-4">
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteRecord(check.id)}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {new Date(check.timestamp).toLocaleTimeString()}
+                  </span>
                 </div>
-              )}
-            </div>
+                
+                <div className="grid grid-cols-1 gap-6">
+                  <div className="space-y-2">
+                    <h3 className="font-medium">Team Morale</h3>
+                    <Progress value={check.morale.value} className="w-full" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium">Communication</h3>
+                    <Progress value={check.communication.value} className="w-full" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium">Productivity</h3>
+                    <Progress value={check.productivity.value} className="w-full" />
+                  </div>
+
+                  {check.why && (
+                    <div className="space-y-2">
+                      <h3 className="font-medium">Why?</h3>
+                      <p className="text-gray-600">{check.why}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
