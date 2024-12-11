@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Trash2 } from 'lucide-react';
 
 interface HealthCheckResponse {
   mood: string;
@@ -55,6 +56,32 @@ const Results = () => {
     }
   };
 
+  const handleDeleteRecord = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('health_checks')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      // Update local state to remove the deleted record
+      setHealthChecks(prevChecks => prevChecks.filter(check => check.id !== id));
+      
+      toast({
+        title: "Success",
+        description: "Health check record deleted successfully.",
+      });
+    } catch (error) {
+      console.error('Error deleting health check:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete health check record.",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     fetchHealthChecks();
 
@@ -101,7 +128,17 @@ const Results = () => {
         {healthChecks.map((check) => (
           <div key={check.id} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-fade-in">
             <div className="flex justify-between items-center border-b pb-4">
-              <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
+              <div className="flex items-center gap-4">
+                <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDeleteRecord(check.id)}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
               <span className="text-sm text-gray-500">
                 {new Date(check.timestamp).toLocaleTimeString()}
               </span>
