@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Info } from 'lucide-react';
 import type { HealthCheck } from '@/types/health-check';
 
 interface HealthCheckCardProps {
@@ -35,21 +35,27 @@ export const HealthCheckCard = ({ healthCheck, onDelete }: HealthCheckCardProps)
           <div className="space-y-2">
             <h3 className="font-medium">Team Morale</h3>
             <Progress value={healthCheck.morale.value} className="w-full" />
+            <p className="text-sm text-gray-600">{healthCheck.morale.mood}</p>
           </div>
 
           <div className="space-y-2">
             <h3 className="font-medium">Communication</h3>
             <Progress value={healthCheck.communication.value} className="w-full" />
+            <p className="text-sm text-gray-600">{healthCheck.communication.mood}</p>
           </div>
 
           <div className="space-y-2">
             <h3 className="font-medium">Productivity</h3>
             <Progress value={healthCheck.productivity.value} className="w-full" />
+            <p className="text-sm text-gray-600">{healthCheck.productivity.mood}</p>
           </div>
 
           {healthCheck.why && (
-            <div className="space-y-2">
-              <h3 className="font-medium">Why?</h3>
+            <div className="space-y-2 bg-secondary/50 p-4 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-muted-foreground" />
+                <h3 className="font-medium">Additional Comments</h3>
+              </div>
               <p className="text-gray-600">{healthCheck.why}</p>
             </div>
           )}
