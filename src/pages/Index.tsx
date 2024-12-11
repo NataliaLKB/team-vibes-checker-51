@@ -41,15 +41,11 @@ const Index = () => {
     }));
   };
 
-  const handleCommentSubmit = (comment: string) => {
+  const handleCommentChange = (comment: string) => {
     setResponses(prev => ({
       ...prev,
       why: comment
     }));
-    toast({
-      title: "Comment saved!",
-      description: "Thank you for your input! 🎉",
-    });
   };
 
   const handleSubmit = async () => {
@@ -149,7 +145,7 @@ const Index = () => {
             onSelect={(mood, value) => handleResponse('productivity', mood, value)}
           />
 
-          <Comments onCommentSubmit={handleCommentSubmit} />
+          <Comments onCommentChange={handleCommentChange} />
 
           <div className="text-center">
             <Button 
