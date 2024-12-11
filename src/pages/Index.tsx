@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HealthCheckCard } from '@/components/HealthCheckCard';
+import { HealthCheckInput } from '@/components/HealthCheckInput';
 import { Comments } from '@/components/Comments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -131,19 +131,19 @@ const Index = () => {
             />
           </div>
 
-          <HealthCheckCard
+          <HealthCheckInput
             title="Team Morale"
             description="How's the team spirit today?"
             onSelect={(mood, value) => handleResponse('morale', mood, value)}
           />
           
-          <HealthCheckCard
+          <HealthCheckInput
             title="Communication"
             description="How well are we communicating?"
             onSelect={(mood, value) => handleResponse('communication', mood, value)}
           />
           
-          <HealthCheckCard
+          <HealthCheckInput
             title="Productivity"
             description="How productive do you feel?"
             onSelect={(mood, value) => handleResponse('productivity', mood, value)}
