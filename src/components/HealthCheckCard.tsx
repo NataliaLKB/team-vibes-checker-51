@@ -1,60 +1,50 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Trash2 } from 'lucide-react';
-import type { HealthCheck } from '@/types/health-check';
+import { cn } from '@/lib/utils';
 
 interface HealthCheckCardProps {
-  healthCheck: HealthCheck;
-  onDelete: (id: string) => void;
+  title: string;
+  description: string;
+  onSelect: (mood: string, value: number) => void;
 }
 
-export const HealthCheckCard = ({ healthCheck, onDelete }: HealthCheckCardProps) => {
+export const HealthCheckCard = ({ title, description, onSelect }: HealthCheckCardProps) => {
+  const [progress, setProgress] = useState<number>(0);
+
+  const handleProgressChange = (value: number) => {
+    setProgress(value);
+    // Map progress value to mood
+    let mood = 'sad';
+    if (value >= 70) {
+      mood = 'happy';
+    } else if (value >= 40) {
+      mood = 'neutral';
+    }
+    onSelect(mood, value);
+  };
+
   return (
-    <Card className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in">
-      <CardHeader className="flex justify-between items-center border-b pb-4 p-0">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-semibold">{healthCheck.name}'s Feedback</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onDelete(healthCheck.id)}
-            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+    <Card className="p-6 animate-scale-in">
+      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <p className="text-sm text-gray-600 mb-4">{description}</p>
+      <div className="space-y-4">
+        <Progress 
+          value={progress} 
+          className="w-full cursor-pointer" 
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = Math.round((x / rect.width) * 100);
+            handleProgressChange(Math.max(0, Math.min(100, percentage)));
+          }}
+        />
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>Not Great</span>
+          <span>Okay</span>
+          <span>Amazing!</span>
         </div>
-        <span className="text-sm text-gray-500">
-          {new Date(healthCheck.timestamp).toLocaleTimeString()}
-        </span>
-      </CardHeader>
-      
-      <CardContent className="p-0">
-        <div className="grid grid-cols-1 gap-6">
-          <div className="space-y-2">
-            <h3 className="font-medium">Team Morale</h3>
-            <Progress value={healthCheck.morale.value} className="w-full" />
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="font-medium">Communication</h3>
-            <Progress value={healthCheck.communication.value} className="w-full" />
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="font-medium">Productivity</h3>
-            <Progress value={healthCheck.productivity.value} className="w-full" />
-          </div>
-
-          {healthCheck.why && (
-            <div className="space-y-2">
-              <h3 className="font-medium">Why?</h3>
-              <p className="text-gray-600">{healthCheck.why}</p>
-            </div>
-          )}
-        </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };
