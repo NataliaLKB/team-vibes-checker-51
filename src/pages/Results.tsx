@@ -84,6 +84,36 @@ const Results = () => {
     }
   };
 
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    // Reset time parts to compare dates properly
+    const dateWithoutTime = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const yesterdayWithoutTime = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+
+    if (dateWithoutTime.getTime() === todayWithoutTime.getTime()) {
+      return 'Today';
+    } else if (dateWithoutTime.getTime() === yesterdayWithoutTime.getTime()) {
+      return 'Yesterday';
+    }
+    return date.toLocaleDateString();
+  };
+
+  const groupHealthChecksByDate = (checks: HealthCheck[]): GroupedHealthChecks => {
+    return checks.reduce((groups: GroupedHealthChecks, check) => {
+      const date = formatDate(check.timestamp);
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(check);
+      return groups;
+    }, {});
+  };
+
   useEffect(() => {
     fetchHealthChecks();
 
@@ -105,17 +135,6 @@ const Results = () => {
       channel.unsubscribe();
     };
   }, []);
-
-  const groupHealthChecksByDate = (checks: HealthCheck[]): GroupedHealthChecks => {
-    return checks.reduce((groups: GroupedHealthChecks, check) => {
-      const date = new Date(check.timestamp).toLocaleDateString();
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].push(check);
-      return groups;
-    }, {});
-  };
 
   if (healthChecks.length === 0) {
     return (
