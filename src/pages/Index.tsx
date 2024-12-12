@@ -128,8 +128,8 @@ const Index = () => {
           </div>
 
           <HealthCheckCard
-            title="Team Morale"
-            description="How's the team spirit today?"
+            title="How are you feeling this week?"
+            description="Share your overall mood and energy level with the team"
             onSelect={(mood, value) => handleResponse('morale', mood, value)}
           />
           
