@@ -48,16 +48,19 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
         <div className="grid grid-cols-1 gap-6">
           <div className="space-y-2">
             <h3 className="font-medium">How are you feeling this week?</h3>
+            <p className="text-sm text-gray-600 mb-2">Share your overall mood and energy level with the team</p>
             <Progress value={check.morale.value} className="w-full" />
           </div>
 
           <div className="space-y-2">
             <h3 className="font-medium">Communication</h3>
+            <p className="text-sm text-gray-600 mb-2">Rate the effectiveness of team communication this week</p>
             <Progress value={check.communication.value} className="w-full" />
           </div>
 
           <div className="space-y-2">
             <h3 className="font-medium">Productivity</h3>
+            <p className="text-sm text-gray-600 mb-2">How productive do you feel you've been this week?</p>
             <Progress value={check.productivity.value} className="w-full" />
           </div>
 
