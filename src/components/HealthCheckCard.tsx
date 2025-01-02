@@ -1,50 +1,59 @@
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
+import React from 'react';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
+import { Trash2 } from 'lucide-react';
+import { HealthCheck } from '@/types/health-check';
 
 interface HealthCheckCardProps {
-  title: string;
-  description: string;
-  onSelect: (mood: string, value: number) => void;
+  check: HealthCheck;
+  onDelete: (id: string) => void;
 }
 
-export const HealthCheckCard = ({ title, description, onSelect }: HealthCheckCardProps) => {
-  const [progress, setProgress] = useState<number>(0);
-
-  const handleProgressChange = (value: number) => {
-    setProgress(value);
-    // Map progress value to mood
-    let mood = 'sad';
-    if (value >= 70) {
-      mood = 'happy';
-    } else if (value >= 40) {
-      mood = 'neutral';
-    }
-    onSelect(mood, value);
-  };
-
+const HealthCheckCard = ({ check, onDelete }: HealthCheckCardProps) => {
   return (
-    <Card className="p-6 animate-scale-in">
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-sm text-gray-600 mb-4">{description}</p>
-      <div className="space-y-4">
-        <Progress 
-          value={progress} 
-          className="w-full cursor-pointer" 
-          onClick={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percentage = Math.round((x / rect.width) * 100);
-            handleProgressChange(Math.max(0, Math.min(100, percentage)));
-          }}
-        />
-        <div className="flex justify-between text-sm text-gray-500">
-          <span>Not Great</span>
-          <span>Okay</span>
-          <span>Amazing!</span>
+    <div className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in">
+      <div className="flex justify-between items-center border-b pb-4">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDelete(check.id)}
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
+        <span className="text-sm text-gray-500">
+          {new Date(check.timestamp).toLocaleTimeString()}
+        </span>
       </div>
-    </Card>
+      
+      <div className="grid grid-cols-1 gap-6">
+        <div className="space-y-2">
+          <h3 className="font-medium">How are you feeling this week?</h3>
+          <Progress value={check.morale.value} className="w-full" />
+        </div>
+
+        <div className="space-y-2">
+          <h3 className="font-medium">Communication</h3>
+          <Progress value={check.communication.value} className="w-full" />
+        </div>
+
+        <div className="space-y-2">
+          <h3 className="font-medium">Productivity</h3>
+          <Progress value={check.productivity.value} className="w-full" />
+        </div>
+
+        {check.why && (
+          <div className="space-y-2">
+            <h3 className="font-medium">Why?</h3>
+            <p className="text-gray-600">{check.why}</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
+
+export default HealthCheckCard;

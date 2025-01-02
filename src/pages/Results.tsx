@@ -1,25 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Trash2 } from 'lucide-react';
-
-interface HealthCheckResponse {
-  mood: string;
-  value: number;
-}
-
-interface HealthCheck {
-  id: string;
-  name: string;
-  morale: HealthCheckResponse;
-  communication: HealthCheckResponse;
-  productivity: HealthCheckResponse;
-  why: string | null;
-  timestamp: string;
-}
+import { HealthCheck } from '@/types/health-check';
+import HealthCheckGroup from '@/components/HealthCheckGroup';
 
 interface GroupedHealthChecks {
   [date: string]: HealthCheck[];
@@ -159,53 +144,12 @@ const Results = () => {
         </div>
 
         {Object.entries(groupedHealthChecks).map(([date, checks]) => (
-          <div key={date} className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-700">{date}</h2>
-            {checks.map((check) => (
-              <div key={check.id} className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in">
-                <div className="flex justify-between items-center border-b pb-4">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteRecord(check.id)}
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {new Date(check.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-6">
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Team Morale</h3>
-                    <Progress value={check.morale.value} className="w-full" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Communication</h3>
-                    <Progress value={check.communication.value} className="w-full" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Productivity</h3>
-                    <Progress value={check.productivity.value} className="w-full" />
-                  </div>
-
-                  {check.why && (
-                    <div className="space-y-2">
-                      <h3 className="font-medium">Why?</h3>
-                      <p className="text-gray-600">{check.why}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <HealthCheckGroup
+            key={date}
+            date={date}
+            checks={checks}
+            onDelete={handleDeleteRecord}
+          />
         ))}
       </div>
     </div>
