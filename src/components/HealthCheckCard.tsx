@@ -69,17 +69,17 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
         <p className="text-gray-600">{description}</p>
       </div>
       
-      <div className="grid grid-cols-5 gap-2">
-        {[1, 2, 3, 4, 5].map((value) => (
-          <Button
-            key={value}
-            variant="outline"
-            className="w-full aspect-square"
-            onClick={() => onSelect?.('mood', value * 20)}
-          >
-            {value}
-          </Button>
-        ))}
+      <div className="space-y-4">
+        <Progress value={0} className="w-full cursor-pointer" onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const percentage = Math.round((x / rect.width) * 100);
+          onSelect?.('mood', Math.min(Math.max(percentage, 0), 100));
+        }} />
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>0%</span>
+          <span>100%</span>
+        </div>
       </div>
     </div>
   );
