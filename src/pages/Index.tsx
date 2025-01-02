@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HealthCheckCard } from '@/components/HealthCheckCard';
+import HealthCheckCard from '@/components/HealthCheckCard';
 import { Comments } from '@/components/Comments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
