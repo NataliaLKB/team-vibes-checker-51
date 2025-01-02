@@ -13,6 +13,17 @@ interface HealthCheckCardProps {
 }
 
 const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: HealthCheckCardProps) => {
+  const [localValue, setLocalValue] = React.useState(0);
+
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = Math.round((x / rect.width) * 100);
+    const clampedValue = Math.min(Math.max(percentage, 0), 100);
+    setLocalValue(clampedValue);
+    onSelect?.('mood', clampedValue);
+  };
+
   // If we have a check object, render the results view
   if (check) {
     return (
@@ -70,12 +81,11 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
       </div>
       
       <div className="space-y-4">
-        <Progress value={0} className="w-full cursor-pointer" onClick={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const percentage = Math.round((x / rect.width) * 100);
-          onSelect?.('mood', Math.min(Math.max(percentage, 0), 100));
-        }} />
+        <Progress 
+          value={localValue} 
+          className="w-full cursor-pointer hover:bg-secondary/80 transition-colors" 
+          onClick={handleProgressClick}
+        />
         <div className="flex justify-between text-sm text-gray-500">
           <span>0%</span>
           <span>100%</span>
