@@ -3,18 +3,32 @@ import { HealthCheck } from '@/types/health-check';
 
 interface TeamHealthGraphProps {
   healthChecks: HealthCheck[];
-  date?: string; // Optional date parameter, if not provided defaults to today
+  date?: string;
 }
 
 const TeamHealthGraph = ({ healthChecks, date }: TeamHealthGraphProps) => {
-  // Calculate averages for the specified date's metrics
   const calculateAverages = () => {
     if (!healthChecks.length) return null;
     
     const targetDate = date || new Date().toLocaleDateString();
     const dateChecks = healthChecks.filter(check => {
+      // Convert the timestamp to the local timezone and strip the time portion
       const checkDate = new Date(check.timestamp);
-      return checkDate.toLocaleDateString() === targetDate;
+      const checkDateString = new Date(
+        checkDate.getFullYear(),
+        checkDate.getMonth(),
+        checkDate.getDate()
+      ).toLocaleDateString();
+      
+      // Convert the target date to a Date object for consistent comparison
+      const targetDateObj = new Date(targetDate);
+      const targetDateString = new Date(
+        targetDateObj.getFullYear(),
+        targetDateObj.getMonth(),
+        targetDateObj.getDate()
+      ).toLocaleDateString();
+
+      return checkDateString === targetDateString;
     });
 
     if (!dateChecks.length) return null;
