@@ -12,7 +12,6 @@ const TeamHealthGraph = ({ healthChecks, date }: TeamHealthGraphProps) => {
     
     const targetDate = date || new Date().toLocaleDateString();
     const dateChecks = healthChecks.filter(check => {
-      // Convert the timestamp to the local timezone and strip the time portion
       const checkDate = new Date(check.timestamp);
       const checkDateString = new Date(
         checkDate.getFullYear(),
@@ -20,7 +19,6 @@ const TeamHealthGraph = ({ healthChecks, date }: TeamHealthGraphProps) => {
         checkDate.getDate()
       ).toLocaleDateString();
       
-      // Convert the target date to a Date object for consistent comparison
       const targetDateObj = new Date(targetDate);
       const targetDateString = new Date(
         targetDateObj.getFullYear(),
@@ -33,10 +31,11 @@ const TeamHealthGraph = ({ healthChecks, date }: TeamHealthGraphProps) => {
 
     if (!dateChecks.length) return null;
 
+    // Access the nested value property from the response objects
     return {
-      morale: dateChecks.reduce((sum, check) => sum + check.morale.value, 0) / dateChecks.length,
-      communication: dateChecks.reduce((sum, check) => sum + check.communication.value, 0) / dateChecks.length,
-      productivity: dateChecks.reduce((sum, check) => sum + check.productivity.value, 0) / dateChecks.length,
+      morale: dateChecks.reduce((sum, check) => sum + (check.morale?.value || 0), 0) / dateChecks.length,
+      communication: dateChecks.reduce((sum, check) => sum + (check.communication?.value || 0), 0) / dateChecks.length,
+      productivity: dateChecks.reduce((sum, check) => sum + (check.productivity?.value || 0), 0) / dateChecks.length,
     };
   };
 
