@@ -3,24 +3,25 @@ import { HealthCheck } from '@/types/health-check';
 
 interface TeamHealthGraphProps {
   healthChecks: HealthCheck[];
+  date?: string; // Optional date parameter, if not provided defaults to today
 }
 
-const TeamHealthGraph = ({ healthChecks }: TeamHealthGraphProps) => {
-  // Calculate averages for today's metrics
+const TeamHealthGraph = ({ healthChecks, date }: TeamHealthGraphProps) => {
+  // Calculate averages for the specified date's metrics
   const calculateAverages = () => {
     if (!healthChecks.length) return null;
     
-    const today = new Date().toLocaleDateString();
-    const todayChecks = healthChecks.filter(check => 
-      new Date(check.timestamp).toLocaleDateString() === today
+    const targetDate = date || new Date().toLocaleDateString();
+    const dateChecks = healthChecks.filter(check => 
+      new Date(check.timestamp).toLocaleDateString() === targetDate
     );
 
-    if (!todayChecks.length) return null;
+    if (!dateChecks.length) return null;
 
     return {
-      morale: todayChecks.reduce((sum, check) => sum + check.morale.value, 0) / todayChecks.length,
-      communication: todayChecks.reduce((sum, check) => sum + check.communication.value, 0) / todayChecks.length,
-      productivity: todayChecks.reduce((sum, check) => sum + check.productivity.value, 0) / todayChecks.length,
+      morale: dateChecks.reduce((sum, check) => sum + check.morale.value, 0) / dateChecks.length,
+      communication: dateChecks.reduce((sum, check) => sum + check.communication.value, 0) / dateChecks.length,
+      productivity: dateChecks.reduce((sum, check) => sum + check.productivity.value, 0) / dateChecks.length,
     };
   };
 
@@ -45,7 +46,7 @@ const TeamHealthGraph = ({ healthChecks }: TeamHealthGraphProps) => {
   if (!averages) {
     return (
       <div className="text-center p-6 bg-white rounded-lg shadow-md">
-        <p className="text-gray-600">No health check data available for today</p>
+        <p className="text-gray-600">No health check data available for {date || 'today'}</p>
       </div>
     );
   }
@@ -58,7 +59,7 @@ const TeamHealthGraph = ({ healthChecks }: TeamHealthGraphProps) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-      <h2 className="text-xl font-semibold text-center">Today's Team Health Overview</h2>
+      <h2 className="text-xl font-semibold text-center">{date || "Today's"} Team Health Overview</h2>
       <div className="grid grid-cols-3 gap-4">
         {metrics.map((metric) => (
           <div key={metric.name} className="text-center p-4 bg-secondary rounded-lg">

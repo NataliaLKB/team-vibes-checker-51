@@ -144,8 +144,6 @@ const Results = () => {
           </div>
         </div>
 
-        <TeamHealthGraph healthChecks={healthChecks} />
-
         {Object.entries(groupedHealthChecks).map(([date, checks]) => (
           <HealthCheckGroup
             key={date}
