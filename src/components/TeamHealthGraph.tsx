@@ -12,9 +12,10 @@ const TeamHealthGraph = ({ healthChecks, date }: TeamHealthGraphProps) => {
     if (!healthChecks.length) return null;
     
     const targetDate = date || new Date().toLocaleDateString();
-    const dateChecks = healthChecks.filter(check => 
-      new Date(check.timestamp).toLocaleDateString() === targetDate
-    );
+    const dateChecks = healthChecks.filter(check => {
+      const checkDate = new Date(check.timestamp);
+      return checkDate.toLocaleDateString() === targetDate;
+    });
 
     if (!dateChecks.length) return null;
 
