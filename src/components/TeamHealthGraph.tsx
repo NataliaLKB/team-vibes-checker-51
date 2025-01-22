@@ -6,21 +6,14 @@ interface TeamHealthGraphProps {
 }
 
 const TeamHealthGraph = ({ healthChecks }: TeamHealthGraphProps) => {
-  // Calculate averages for today's metrics
+  // Calculate averages for the given set of health checks
   const calculateAverages = () => {
     if (!healthChecks.length) return null;
     
-    const today = new Date().toLocaleDateString();
-    const todayChecks = healthChecks.filter(check => 
-      new Date(check.timestamp).toLocaleDateString() === today
-    );
-
-    if (!todayChecks.length) return null;
-
     return {
-      morale: todayChecks.reduce((sum, check) => sum + check.morale.value, 0) / todayChecks.length,
-      communication: todayChecks.reduce((sum, check) => sum + check.communication.value, 0) / todayChecks.length,
-      productivity: todayChecks.reduce((sum, check) => sum + check.productivity.value, 0) / todayChecks.length,
+      morale: healthChecks.reduce((sum, check) => sum + check.morale.value, 0) / healthChecks.length,
+      communication: healthChecks.reduce((sum, check) => sum + check.communication.value, 0) / healthChecks.length,
+      productivity: healthChecks.reduce((sum, check) => sum + check.productivity.value, 0) / healthChecks.length,
     };
   };
 
@@ -45,7 +38,7 @@ const TeamHealthGraph = ({ healthChecks }: TeamHealthGraphProps) => {
   if (!averages) {
     return (
       <div className="text-center p-6 bg-white rounded-lg shadow-md">
-        <p className="text-gray-600">No health check data available for today</p>
+        <p className="text-gray-600">No health check data available for this period</p>
       </div>
     );
   }
@@ -58,7 +51,7 @@ const TeamHealthGraph = ({ healthChecks }: TeamHealthGraphProps) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-      <h2 className="text-xl font-semibold text-center">Today's Team Health Overview</h2>
+      <h2 className="text-xl font-semibold text-center">Team Health Overview</h2>
       <div className="grid grid-cols-3 gap-4">
         {metrics.map((metric) => (
           <div key={metric.name} className="text-center p-4 bg-secondary rounded-lg">
