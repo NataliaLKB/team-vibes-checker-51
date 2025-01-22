@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { HealthCheck, HealthCheckResponse } from '@/types/health-check';
 import HealthCheckGroup from '@/components/HealthCheckGroup';
-import TeamHealthGraph from '@/components/TeamHealthGraph';
 
 interface GroupedHealthChecks {
   [date: string]: HealthCheck[];
@@ -143,8 +142,6 @@ const Results = () => {
             <Button onClick={() => navigate('/')}>Submit Another Response</Button>
           </div>
         </div>
-
-        <TeamHealthGraph healthChecks={healthChecks} />
 
         {Object.entries(groupedHealthChecks).map(([date, checks]) => (
           <HealthCheckGroup
