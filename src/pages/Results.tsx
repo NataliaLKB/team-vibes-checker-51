@@ -22,7 +22,7 @@ const Results = () => {
         .from('health_checks')
         .select()
         .order('timestamp', { ascending: false })
-        .limit(5);
+        .limit(20);
 
       if (error) throw error;
       
