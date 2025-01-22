@@ -58,6 +58,15 @@ const Index = () => {
       return;
     }
 
+    if (!responses.why.trim()) {
+      toast({
+        title: "Comments required",
+        description: "Please share why you feel this way before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (Object.values(responses).slice(1, -1).every(r => r.mood)) {
       const finalResponses = {
         name,

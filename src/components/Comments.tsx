@@ -9,11 +9,12 @@ interface CommentsProps {
 export const Comments = ({ onCommentChange }: CommentsProps) => {
   return (
     <Card className="p-6 animate-scale-in">
-      <h3 className="text-xl font-semibold mb-4">Why?</h3>
+      <h3 className="text-xl font-semibold mb-4">Why? *</h3>
       <Textarea
-        placeholder="Tell us why you feel this way..."
+        placeholder="Tell us why you feel this way... (required)"
         onChange={(e) => onCommentChange(e.target.value)}
         className="mb-4"
+        required
       />
     </Card>
   );
