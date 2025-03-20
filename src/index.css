@@ -106,12 +106,27 @@
   }
 }
 
-/* Custom styles for cards */
-.card-primary {
-  @apply border-primary-light shadow-md;
+@layer components {
+  /* Custom styles for cards */
+  .card-primary {
+    @apply border-primary-light shadow-md;
+  }
+
+  /* Brand-specific theme styles */
+  .brand-header {
+    @apply bg-darkBlue-DEFAULT text-white py-4 px-6 rounded-b-lg shadow-md;
+  }
+
+  .brand-card {
+    @apply bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md transition-shadow;
+  }
+
+  .brand-input {
+    @apply border-primary focus:border-primary-dark focus:ring-primary;
+  }
 }
 
-/* Animation for logo */
+/* Animation for logo - keeping outside layers as it uses vanilla CSS */
 .logo-hover {
   transition: transform 0.3s ease;
 }
@@ -120,15 +135,3 @@
   transform: scale(1.05);
 }
 
-/* Brand-specific theme styles */
-.brand-header {
-  @apply bg-darkBlue-DEFAULT text-white py-4 px-6 rounded-b-lg shadow-md;
-}
-
-.brand-card {
-  @apply bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md transition-shadow;
-}
-
-.brand-input {
-  @apply border-primary focus:border-primary-dark focus:ring-primary;
-}
