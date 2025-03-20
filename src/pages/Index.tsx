@@ -155,7 +155,7 @@ const Index = () => {
   };
 
   return <div className="min-h-screen bg-background text-foreground">
-      <div className="bg-darkBlue-DEFAULT dark:bg-gray-900 text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8">
+      <div className={`${theme === 'light' ? 'bg-[#F1F1F1]' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
         <div className="max-w-6xl mx-auto flex items-center">
           <div className="flex-1">
             <img 
@@ -164,7 +164,7 @@ const Index = () => {
               className="h-6" 
             />
           </div>
-          <h1 className="text-lg font-normal flex-1 text-center text-slate-50">Team Health Check</h1>
+          <h1 className={`text-lg font-normal flex-1 text-center ${theme === 'light' ? 'text-[#333333]' : 'text-slate-50'}`}>Team Health Check</h1>
           <div className="flex-1 flex justify-end">
             <ThemeToggle />
           </div>
