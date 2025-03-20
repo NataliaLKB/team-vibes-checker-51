@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { HealthCheck, HealthCheckResponse } from '@/types/health-check';
 import HealthCheckGroup from '@/components/HealthCheckGroup';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface GroupedHealthChecks {
   [date: string]: HealthCheck[];
@@ -14,6 +16,24 @@ const Results = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains('dark');
+    setTheme(isDark ? 'dark' : 'light');
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          const isDarkNow = document.documentElement.classList.contains('dark');
+          setTheme(isDarkNow ? 'dark' : 'light');
+        }
+      });
+    });
+    observer.observe(document.documentElement, {
+      attributes: true
+    });
+    return () => observer.disconnect();
+  }, []);
   
   const fetchHealthChecks = async () => {
     try {
@@ -123,7 +143,18 @@ const Results = () => {
 
   if (healthChecks.length === 0) {
     return (
-      <div className="min-h-screen bg-secondary p-8 text-center">
+      <div className="min-h-screen bg-secondary dark:bg-gray-900 p-8 text-center">
+        <div className={`${theme === 'light' ? 'bg-white' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
+          <div className="max-w-6xl mx-auto flex items-center">
+            <div className="flex-1">
+              <img src="/lovable-uploads/c8b4cabf-f0ee-4d05-883b-4070fbf16a5e.png" alt="SmartShift Logo" className="h-6" />
+            </div>
+            <h1 className={`text-lg font-normal flex-1 text-center ${theme === 'light' ? 'text-[#333333]' : 'text-slate-50'}`}>Team Health Check</h1>
+            <div className="flex-1 flex justify-end">
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
         <h1 className="text-4xl font-bold mb-4">No Results Found</h1>
         <Button onClick={() => navigate('/')}>Return to Health Check</Button>
       </div>
@@ -133,11 +164,23 @@ const Results = () => {
   const groupedHealthChecks = groupHealthChecksByDate(healthChecks);
 
   return (
-    <div className="min-h-screen bg-secondary p-8">
+    <div className="min-h-screen bg-secondary dark:bg-gray-900 p-8">
+      <div className={`${theme === 'light' ? 'bg-white' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
+        <div className="max-w-6xl mx-auto flex items-center">
+          <div className="flex-1">
+            <img src="/lovable-uploads/c8b4cabf-f0ee-4d05-883b-4070fbf16a5e.png" alt="SmartShift Logo" className="h-6" />
+          </div>
+          <h1 className={`text-lg font-normal flex-1 text-center ${theme === 'light' ? 'text-[#333333]' : 'text-slate-50'}`}>Team Health Check</h1>
+          <div className="flex-1 flex justify-end">
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Health Check Results</h1>
-          <p className="text-gray-600">Recent submissions from the team</p>
+          <h1 className="text-4xl font-bold mb-4 text-[#00ced1] dark:text-[#00ced1]">Health Check Results</h1>
+          <p className="text-gray-600 dark:text-gray-300">Recent submissions from the team</p>
           <div className="mt-4 flex justify-center">
             <Button onClick={() => navigate('/')}>Submit Another Response</Button>
           </div>
