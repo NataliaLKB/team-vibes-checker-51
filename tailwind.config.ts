@@ -39,6 +39,11 @@ export default {
           DEFAULT: "#FFFFFF",
           foreground: "#333333",
         },
+        darkBlue: {
+          DEFAULT: "#021936",
+          light: "#052b5c",
+          dark: "#01112a",
+        },
       },
       keyframes: {
         "scale-in": {
