@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthCheckCard from '@/components/HealthCheckCard';
@@ -9,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Json } from '@/integrations/supabase/types';
 import { ThemeToggle } from '@/components/ThemeToggle';
-
 interface HealthCheckResponse {
   mood: string;
   value: number;
@@ -21,7 +19,6 @@ interface Responses {
   productivity: HealthCheckResponse;
   why: string;
 }
-
 const Index = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -41,9 +38,9 @@ const Index = () => {
     },
     why: ''
   });
-  
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
   const handleResponse = (category: 'morale' | 'communication' | 'productivity', mood: string, value: number) => {
     setResponses(prev => ({
       ...prev,
@@ -53,14 +50,12 @@ const Index = () => {
       }
     }));
   };
-  
   const handleCommentChange = (comment: string) => {
     setResponses(prev => ({
       ...prev,
       why: comment
     }));
   };
-  
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
@@ -70,7 +65,6 @@ const Index = () => {
       });
       return;
     }
-    
     if (!responses.why.trim()) {
       toast({
         title: "Comments required",
@@ -79,7 +73,6 @@ const Index = () => {
       });
       return;
     }
-    
     if (Object.values(responses).slice(1, -1).every(r => r.mood)) {
       const finalResponses = {
         name,
@@ -88,23 +81,21 @@ const Index = () => {
         productivity: responses.productivity as unknown as Json,
         why: responses.why
       };
-      
       try {
-        const { error } = await supabase.from('health_checks').insert([finalResponses]);
+        const {
+          error
+        } = await supabase.from('health_checks').insert([finalResponses]);
         if (error) throw error;
-        
         toast({
           title: "Health check submitted!",
           description: `Thank you for participating, ${name}! 🌟`
         });
-        
         console.log('Saved responses:', finalResponses);
         navigate('/results', {
           state: {
             responses: finalResponses
           }
         });
-        
         setName('');
         setResponses({
           name: '',
@@ -138,9 +129,7 @@ const Index = () => {
       });
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
+  return <div className="min-h-screen bg-background text-foreground">
       <div className="bg-darkBlue-DEFAULT dark:bg-gray-900 text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
@@ -159,48 +148,24 @@ const Index = () => {
 
         <div className="grid gap-8">
           <div className="animate-scale-in">
-            <Input 
-              type="text" 
-              placeholder="Enter your name" 
-              value={name} 
-              onChange={e => setName(e.target.value)} 
-              className="max-w-md mx-auto border-primary focus-visible:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400" 
-            />
+            <Input type="text" placeholder="Enter your name" value={name} onChange={e => setName(e.target.value)} className="max-w-md mx-auto border-primary focus-visible:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400" />
           </div>
 
-          <HealthCheckCard 
-            title="How are you feeling this week?" 
-            description="Share your overall mood and energy level with the team" 
-            onSelect={(mood, value) => handleResponse('morale', mood, value)} 
-          />
+          <HealthCheckCard title="How are you feeling this week?" description="Share your overall mood and energy level with the team" onSelect={(mood, value) => handleResponse('morale', mood, value)} />
           
-          <HealthCheckCard 
-            title="Communication" 
-            description="How well are we communicating?" 
-            onSelect={(mood, value) => handleResponse('communication', mood, value)} 
-          />
+          <HealthCheckCard title="Communication" description="How well are we communicating?" onSelect={(mood, value) => handleResponse('communication', mood, value)} />
           
-          <HealthCheckCard 
-            title="Productivity" 
-            description="How productive do you feel?" 
-            onSelect={(mood, value) => handleResponse('productivity', mood, value)} 
-          />
+          <HealthCheckCard title="Productivity" description="How productive do you feel?" onSelect={(mood, value) => handleResponse('productivity', mood, value)} />
 
           <Comments onCommentChange={handleCommentChange} />
 
           <div className="text-center">
-            <Button 
-              size="lg" 
-              onClick={handleSubmit} 
-              className="px-8 bg-primary hover:bg-primary/90 text-white"
-            >
+            <Button size="lg" onClick={handleSubmit} className="px-8 bg-primary hover:bg-primary/90 text-slate-950">
               Submit Health Check
             </Button>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
