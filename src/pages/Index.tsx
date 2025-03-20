@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthCheckCard from '@/components/HealthCheckCard';
@@ -155,24 +156,26 @@ const Index = () => {
 
   return <div className="min-h-screen bg-background text-foreground">
       <div className="bg-darkBlue-DEFAULT dark:bg-gray-900 text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex items-center">
+        <div className="max-w-6xl mx-auto flex items-center">
+          <div className="flex-1">
             {theme === 'light' ? (
               <img 
                 src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" 
                 alt="SmartShift Logo" 
-                className="h-8 mr-4" 
+                className="h-8" 
               />
             ) : (
               <img 
                 src="/lovable-uploads/9b33ff5c-e5b2-46c3-9ec8-9d7f38e6cfa3.png" 
                 alt="SmartShift Logo" 
-                className="h-8 mr-4" 
+                className="h-8" 
               />
             )}
-            <h1 className="text-2xl font-bold">Team Health Check</h1>
           </div>
-          <ThemeToggle />
+          <h1 className="text-lg font-normal flex-1 text-center">Team Health Check</h1>
+          <div className="flex-1 flex justify-end">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 
