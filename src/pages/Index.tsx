@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthCheckCard from '@/components/HealthCheckCard';
@@ -120,8 +121,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-secondary p-8">
       <div className="max-w-3xl mx-auto space-y-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Team Health Check</h1>
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-64 mb-4">
+            <img 
+              src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" 
+              alt="SmartShift Logo" 
+              className="w-full h-auto"
+            />
+          </div>
+          <h1 className="text-4xl font-bold mb-2 text-primary-dark">Team Health Check</h1>
           <p className="text-gray-600">How are we doing today? Let us know with some fun reactions! 😊</p>
         </div>
 
@@ -132,7 +140,7 @@ const Index = () => {
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="max-w-md mx-auto"
+              className="max-w-md mx-auto border-primary-light focus-visible:ring-primary"
             />
           </div>
 
@@ -160,7 +168,7 @@ const Index = () => {
             <Button 
               size="lg"
               onClick={handleSubmit}
-              className="px-8"
+              className="px-8 bg-primary hover:bg-primary-dark"
             >
               Submit Health Check
             </Button>

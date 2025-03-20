@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,6 +97,25 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-secondary text-foreground;
   }
+  
+  /* Custom styles for progress bars to match our new color scheme */
+  .react-progress-bar {
+    @apply bg-primary;
+  }
+}
+
+/* Custom styles for cards */
+.card-primary {
+  @apply border-primary-light shadow-md;
+}
+
+/* Animation for logo */
+.logo-hover {
+  transition: transform 0.3s ease;
+}
+
+.logo-hover:hover {
+  transform: scale(1.05);
 }
