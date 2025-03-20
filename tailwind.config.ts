@@ -1,6 +1,8 @@
 
 import type { Config } from "tailwindcss";
 
+console.log("Tailwind config loaded");
+
 export default {
   darkMode: ["class"],
   content: [
@@ -17,6 +19,7 @@ export default {
       screens: {
         "2xl": "1400px",
       },
+      
     },
     extend: {
       colors: {
