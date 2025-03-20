@@ -152,7 +152,7 @@ const Index = () => {
           <div className="flex-1">
             {theme === 'light' ? <img src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" alt="SmartShift Logo" className="h-8" /> : <img src="/lovable-uploads/9b33ff5c-e5b2-46c3-9ec8-9d7f38e6cfa3.png" alt="SmartShift Logo" className="h-8" />}
           </div>
-          <h1 className="text-lg font-normal flex-1 text-center">Team Health Check</h1>
+          <h1 className="text-lg font-normal flex-1 text-center text-[#038b8d]">Team Health Check</h1>
           <div className="flex-1 flex justify-end">
             <ThemeToggle />
           </div>
