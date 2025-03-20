@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Json } from '@/integrations/supabase/types';
 import { ThemeToggle } from '@/components/ThemeToggle';
+
 interface HealthCheckResponse {
   mood: string;
   value: number;
@@ -19,6 +20,7 @@ interface Responses {
   productivity: HealthCheckResponse;
   why: string;
 }
+
 const Index = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -42,6 +44,7 @@ const Index = () => {
   const {
     toast
   } = useToast();
+
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
     setTheme(isDark ? 'dark' : 'light');
@@ -58,6 +61,7 @@ const Index = () => {
     });
     return () => observer.disconnect();
   }, []);
+
   const handleResponse = (category: 'morale' | 'communication' | 'productivity', mood: string, value: number) => {
     setResponses(prev => ({
       ...prev,
@@ -67,12 +71,14 @@ const Index = () => {
       }
     }));
   };
+
   const handleCommentChange = (comment: string) => {
     setResponses(prev => ({
       ...prev,
       why: comment
     }));
   };
+
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
@@ -146,7 +152,8 @@ const Index = () => {
       });
     }
   };
-  return <div className="min-h-screen bg-[#f5f4f5] text-foreground">
+
+  return <div className="min-h-screen bg-[#f5f4f5] dark:bg-gray-900 text-foreground">
       <div className={`${theme === 'light' ? 'bg-white' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
         <div className="max-w-6xl mx-auto flex items-center">
           <div className="flex-1">
@@ -161,7 +168,7 @@ const Index = () => {
 
       <div className="max-w-3xl mx-auto p-6 space-y-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-2 text-darkBlue-DEFAULT text-[#00ced1]">How are we doing this week?</h2>
+          <h2 className="text-3xl font-bold mb-2 text-darkBlue-DEFAULT text-[#00ced1] dark:text-[#00ced1]">How are we doing this week?</h2>
           <p className="text-gray-600 dark:text-gray-300">Let us know below! 😊</p>
         </div>
 
@@ -187,4 +194,5 @@ const Index = () => {
       </div>
     </div>;
 };
+
 export default Index;
