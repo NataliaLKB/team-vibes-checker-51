@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 console.log("Tailwind config loaded");
@@ -47,6 +46,7 @@ export default {
           light: "#052b5c",
           dark: "#01112a",
         },
+        'darkBlue-DEFAULT': '#021936',
       },
       keyframes: {
         "scale-in": {
