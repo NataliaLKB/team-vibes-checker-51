@@ -119,18 +119,24 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary p-8">
-      <div className="max-w-3xl mx-auto space-y-8">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-64 mb-4">
+    <div className="min-h-screen bg-secondary">
+      <div className="bg-darkBlue-DEFAULT text-white py-4 px-8 shadow-md mb-8">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <div className="flex items-center">
             <img 
               src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" 
               alt="SmartShift Logo" 
-              className="w-full h-auto"
+              className="h-12 mr-4"
             />
+            <h1 className="text-2xl font-bold">Team Health Check</h1>
           </div>
-          <h1 className="text-4xl font-bold mb-2 text-primary-dark">Team Health Check</h1>
-          <p className="text-gray-600">How are we doing today? Let us know with some fun reactions! 😊</p>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto p-6 space-y-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2 text-darkBlue-DEFAULT">How are we doing today?</h2>
+          <p className="text-gray-600">Let us know with some fun reactions! 😊</p>
         </div>
 
         <div className="grid gap-8">
@@ -140,7 +146,7 @@ const Index = () => {
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="max-w-md mx-auto border-primary-light focus-visible:ring-primary"
+              className="max-w-md mx-auto border-primary focus-visible:ring-primary"
             />
           </div>
 
@@ -168,7 +174,7 @@ const Index = () => {
             <Button 
               size="lg"
               onClick={handleSubmit}
-              className="px-8 bg-primary hover:bg-primary-dark"
+              className="px-8 bg-primary hover:bg-primary-dark text-white"
             >
               Submit Health Check
             </Button>

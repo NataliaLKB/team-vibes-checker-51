@@ -35,6 +35,12 @@ export default {
           DEFAULT: "#f5f4f5",
           foreground: "#333333",
         },
+        darkBlue: {
+          DEFAULT: "#021936",
+          light: "#0a2a54",
+          dark: "#010e1d",
+          foreground: "#FFFFFF",
+        },
         card: {
           DEFAULT: "#FFFFFF",
           foreground: "#333333",

@@ -119,3 +119,16 @@
 .logo-hover:hover {
   transform: scale(1.05);
 }
+
+/* Brand-specific theme styles */
+.brand-header {
+  @apply bg-darkBlue-DEFAULT text-white py-4 px-6 rounded-b-lg shadow-md;
+}
+
+.brand-card {
+  @apply bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md transition-shadow;
+}
+
+.brand-input {
+  @apply border-primary focus:border-primary-dark focus:ring-primary;
+}
