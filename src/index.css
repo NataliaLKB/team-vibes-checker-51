@@ -119,12 +119,3 @@
 .logo-hover:hover {
   transform: scale(1.05);
 }
-
-/* Light theme specific styles (replaced dark blue theme) */
-.dark-blue-theme {
-  @apply bg-white text-gray-800;
-}
-
-.dark-blue-card {
-  @apply bg-gray-50 border-gray-200;
-}

@@ -1,6 +1,5 @@
-import type { Config } from "tailwindcss";
 
-console.log("Tailwind config loaded");
+import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
@@ -18,7 +17,6 @@ export default {
       screens: {
         "2xl": "1400px",
       },
-      
     },
     extend: {
       colors: {
@@ -41,12 +39,6 @@ export default {
           DEFAULT: "#FFFFFF",
           foreground: "#333333",
         },
-        darkBlue: {
-          DEFAULT: "#021936",
-          light: "#052b5c",
-          dark: "#01112a",
-        },
-        'darkBlue-DEFAULT': '#021936',
       },
       keyframes: {
         "scale-in": {

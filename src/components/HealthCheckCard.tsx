@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -28,10 +27,10 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
   // If we have a check object, render the results view
   if (check) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in border border-gray-200">
-        <div className="flex justify-between items-center border-b border-gray-200 pb-4">
+      <div className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in">
+        <div className="flex justify-between items-center border-b pb-4">
           <div className="flex items-center gap-4">
-            <h2 className="text-xl font-semibold text-gray-800">{check.name}'s Feedback</h2>
+            <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
             <Button
               variant="ghost"
               size="icon"
@@ -48,26 +47,26 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
         
         <div className="grid grid-cols-1 gap-6">
           <div className="space-y-2">
-            <h3 className="font-medium text-gray-800">How are you feeling this week?</h3>
+            <h3 className="font-medium">How are you feeling this week?</h3>
             <p className="text-sm text-gray-600 mb-2">Share your overall mood and energy level with the team</p>
-            <Progress value={check.morale.value} className="w-full bg-gray-100" />
+            <Progress value={check.morale.value} className="w-full" />
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-medium text-gray-800">Communication</h3>
+            <h3 className="font-medium">Communication</h3>
             <p className="text-sm text-gray-600 mb-2">Rate the effectiveness of team communication this week</p>
-            <Progress value={check.communication.value} className="w-full bg-gray-100" />
+            <Progress value={check.communication.value} className="w-full" />
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-medium text-gray-800">Productivity</h3>
+            <h3 className="font-medium">Productivity</h3>
             <p className="text-sm text-gray-600 mb-2">How productive do you feel you've been this week?</p>
-            <Progress value={check.productivity.value} className="w-full bg-gray-100" />
+            <Progress value={check.productivity.value} className="w-full" />
           </div>
 
           {check.why && (
             <div className="space-y-2">
-              <h3 className="font-medium text-gray-800">Why?</h3>
+              <h3 className="font-medium">Why?</h3>
               <p className="text-gray-600">{check.why}</p>
             </div>
           )}
@@ -78,16 +77,16 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
 
   // Otherwise, render the input view
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md space-y-4 border border-gray-200">
+    <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+        <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-gray-600">{description}</p>
       </div>
       
       <div className="space-y-4">
         <Progress 
           value={localValue} 
-          className="w-full cursor-pointer hover:bg-gray-100 transition-colors bg-gray-100" 
+          className="w-full cursor-pointer hover:bg-secondary/80 transition-colors" 
           onClick={handleProgressClick}
         />
         <div className="flex justify-between text-sm text-gray-500">

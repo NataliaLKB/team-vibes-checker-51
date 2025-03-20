@@ -119,30 +119,28 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen dark-blue-theme p-8">
+    <div className="min-h-screen bg-secondary p-8">
       <div className="max-w-3xl mx-auto space-y-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="w-32 logo-hover">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-64 mb-4">
             <img 
-              src="/lovable-uploads/b204859d-0789-4fcd-aad6-b90ffbb32184.png" 
+              src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" 
               alt="SmartShift Logo" 
               className="w-full h-auto"
             />
           </div>
-          <div>
-            <h1 className="text-4xl font-bold mb-2 text-primary">Team Health Check</h1>
-            <p className="text-gray-600">How are we doing today? Let us know with some fun reactions! 😊</p>
-          </div>
+          <h1 className="text-4xl font-bold mb-2 text-primary-dark">Team Health Check</h1>
+          <p className="text-gray-600">How are we doing today? Let us know with some fun reactions! 😊</p>
         </div>
 
         <div className="grid gap-8">
-          <div className="animate-scale-in bg-gray-50 p-6 rounded-lg">
+          <div className="animate-scale-in">
             <Input
               type="text"
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="max-w-md mx-auto border-gray-200 focus-visible:ring-primary"
+              className="max-w-md mx-auto border-primary-light focus-visible:ring-primary"
             />
           </div>
 
