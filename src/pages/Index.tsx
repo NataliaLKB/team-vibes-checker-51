@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthCheckCard from '@/components/HealthCheckCard';
@@ -154,7 +153,7 @@ const Index = () => {
     }
   };
 
-  return <div className="min-h-screen bg-[#f5f4f5] dark:bg-gray-900 text-foreground">
+  return <div className="min-h-screen bg-[#f5f4f5] dark:bg-gray-900 text-foreground p-8">
       <div className={`${theme === 'light' ? 'bg-white' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
         <div className="max-w-6xl mx-auto flex items-center">
           <div className="flex-1">
@@ -167,7 +166,7 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto p-6 space-y-8">
+      <div className="max-w-3xl mx-auto space-y-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2 text-[#00ced1] dark:text-[#00ced1]">How are we doing this week?</h2>
           <p className="text-gray-600 dark:text-gray-300">Let us know below! 😊</p>
