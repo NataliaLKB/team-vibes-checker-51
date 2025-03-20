@@ -162,7 +162,7 @@ const Index = () => {
       <div className="max-w-3xl mx-auto p-6 space-y-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2 text-darkBlue-DEFAULT text-[#00ced1]">How are we doing this week?</h2>
-          <p className="text-gray-600 dark:text-gray-300">Let us know with some fun reactions! 😊</p>
+          <p className="text-gray-600 dark:text-gray-300">Let us know below! 😊</p>
         </div>
 
         <div className="grid gap-8">
