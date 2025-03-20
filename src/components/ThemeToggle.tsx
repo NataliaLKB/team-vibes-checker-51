@@ -8,13 +8,26 @@ export function ThemeToggle() {
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
+    // Get saved theme from localStorage
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    
+    if (savedTheme === 'dark') {
       setTheme('dark');
       document.documentElement.classList.add('dark');
-    } else {
+    } else if (savedTheme === 'light') {
       setTheme('light');
       document.documentElement.classList.remove('dark');
+    } else {
+      // If no saved preference, check system preference
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        setTheme('light');
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
     }
   }, []);
 
