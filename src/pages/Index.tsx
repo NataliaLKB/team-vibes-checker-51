@@ -8,12 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Json } from '@/integrations/supabase/types';
 import { ThemeToggle } from '@/components/ThemeToggle';
-
 interface HealthCheckResponse {
   mood: string;
   value: number;
 }
-
 interface Responses {
   name: string;
   morale: HealthCheckResponse;
@@ -21,7 +19,6 @@ interface Responses {
   productivity: HealthCheckResponse;
   why: string;
 }
-
 const Index = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -45,7 +42,6 @@ const Index = () => {
   const {
     toast
   } = useToast();
-
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
     setTheme(isDark ? 'dark' : 'light');
@@ -62,7 +58,6 @@ const Index = () => {
     });
     return () => observer.disconnect();
   }, []);
-
   const handleResponse = (category: 'morale' | 'communication' | 'productivity', mood: string, value: number) => {
     setResponses(prev => ({
       ...prev,
@@ -72,14 +67,12 @@ const Index = () => {
       }
     }));
   };
-
   const handleCommentChange = (comment: string) => {
     setResponses(prev => ({
       ...prev,
       why: comment
     }));
   };
-
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
@@ -153,16 +146,11 @@ const Index = () => {
       });
     }
   };
-
   return <div className="min-h-screen bg-[#f5f4f5] text-foreground">
       <div className={`${theme === 'light' ? 'bg-white' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
         <div className="max-w-6xl mx-auto flex items-center">
           <div className="flex-1">
-            <img 
-              src="/lovable-uploads/c8b4cabf-f0ee-4d05-883b-4070fbf16a5e.png" 
-              alt="SmartShift Logo" 
-              className="h-6" 
-            />
+            <img src="/lovable-uploads/c8b4cabf-f0ee-4d05-883b-4070fbf16a5e.png" alt="SmartShift Logo" className="h-6" />
           </div>
           <h1 className={`text-lg font-normal flex-1 text-center ${theme === 'light' ? 'text-[#333333]' : 'text-slate-50'}`}>Team Health Check</h1>
           <div className="flex-1 flex justify-end">
@@ -179,7 +167,7 @@ const Index = () => {
 
         <div className="grid gap-8">
           <div className="animate-scale-in">
-            <Input type="text" placeholder="Enter your name" value={name} onChange={e => setName(e.target.value)} className="max-w-md mx-auto border-primary focus-visible:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400" />
+            <Input type="text" placeholder="Enter your name" value={name} onChange={e => setName(e.target.value)} className="max-w-md mx-auto border-grey focus-visible:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400" />
           </div>
 
           <HealthCheckCard title="How are you feeling this week?" description="Share your overall mood and energy level with the team" onSelect={(mood, value) => handleResponse('morale', mood, value)} />
@@ -199,5 +187,4 @@ const Index = () => {
       </div>
     </div>;
 };
-
 export default Index;
