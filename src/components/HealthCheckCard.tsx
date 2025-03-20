@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -27,47 +28,47 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
   // If we have a check object, render the results view
   if (check) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md space-y-6 animate-scale-in">
-        <div className="flex justify-between items-center border-b pb-4">
+      <div className="bg-white dark:bg-darkBlue-light p-6 rounded-lg shadow-md space-y-6 animate-scale-in dark:border dark:border-gray-700">
+        <div className="flex justify-between items-center border-b dark:border-gray-700 pb-4">
           <div className="flex items-center gap-4">
-            <h2 className="text-xl font-semibold">{check.name}'s Feedback</h2>
+            <h2 className="text-xl font-semibold dark:text-white">{check.name}'s Feedback</h2>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => onDelete?.(check.id)}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 dark:text-red-400 dark:hover:bg-red-400/10"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
             {new Date(check.timestamp).toLocaleTimeString()}
           </span>
         </div>
         
         <div className="grid grid-cols-1 gap-6">
           <div className="space-y-2">
-            <h3 className="font-medium">How are you feeling this week?</h3>
-            <p className="text-sm text-gray-600 mb-2">Share your overall mood and energy level with the team</p>
+            <h3 className="font-medium dark:text-white">How are you feeling this week?</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Share your overall mood and energy level with the team</p>
             <Progress value={check.morale.value} className="w-full" />
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-medium">Communication</h3>
-            <p className="text-sm text-gray-600 mb-2">Rate the effectiveness of team communication this week</p>
+            <h3 className="font-medium dark:text-white">Communication</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Rate the effectiveness of team communication this week</p>
             <Progress value={check.communication.value} className="w-full" />
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-medium">Productivity</h3>
-            <p className="text-sm text-gray-600 mb-2">How productive do you feel you've been this week?</p>
+            <h3 className="font-medium dark:text-white">Productivity</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">How productive do you feel you've been this week?</p>
             <Progress value={check.productivity.value} className="w-full" />
           </div>
 
           {check.why && (
             <div className="space-y-2">
-              <h3 className="font-medium">Why?</h3>
-              <p className="text-gray-600">{check.why}</p>
+              <h3 className="font-medium dark:text-white">Why?</h3>
+              <p className="text-gray-600 dark:text-gray-400">{check.why}</p>
             </div>
           )}
         </div>
@@ -77,19 +78,19 @@ const HealthCheckCard = ({ check, onDelete, title, description, onSelect }: Heal
 
   // Otherwise, render the input view
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
+    <div className="bg-white dark:bg-darkBlue-light dark:text-white p-6 rounded-lg shadow-md space-y-4 dark:border dark:border-gray-700">
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-gray-600">{description}</p>
+        <p className="text-gray-600 dark:text-gray-400">{description}</p>
       </div>
       
       <div className="space-y-4">
         <Progress 
           value={localValue} 
-          className="w-full cursor-pointer hover:bg-secondary/80 transition-colors" 
+          className="w-full cursor-pointer hover:bg-secondary/80 transition-colors dark:hover:bg-darkBlue-DEFAULT/80" 
           onClick={handleProgressClick}
         />
-        <div className="flex justify-between text-sm text-gray-500">
+        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
           <span>0%</span>
           <span>100%</span>
         </div>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthCheckCard from '@/components/HealthCheckCard';
 import { Comments } from '@/components/Comments';
@@ -7,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Json } from '@/integrations/supabase/types';
+import { Moon, Sun } from 'lucide-react';
+
 interface HealthCheckResponse {
   mood: string;
   value: number;
@@ -18,9 +21,11 @@ interface Responses {
   productivity: HealthCheckResponse;
   why: string;
 }
+
 const Index = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const [responses, setResponses] = useState<Responses>({
     name: '',
     morale: {
@@ -37,9 +42,32 @@ const Index = () => {
     },
     why: ''
   });
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
+  // Effect to initialize dark mode based on user preference
+  useEffect(() => {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(isDarkMode);
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  // Function to toggle dark mode
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', String(newDarkMode));
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
   const handleResponse = (category: 'morale' | 'communication' | 'productivity', mood: string, value: number) => {
     setResponses(prev => ({
       ...prev,
@@ -49,12 +77,14 @@ const Index = () => {
       }
     }));
   };
+
   const handleCommentChange = (comment: string) => {
     setResponses(prev => ({
       ...prev,
       why: comment
     }));
   };
+
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
@@ -81,9 +111,7 @@ const Index = () => {
         why: responses.why
       };
       try {
-        const {
-          error
-        } = await supabase.from('health_checks').insert([finalResponses]);
+        const { error } = await supabase.from('health_checks').insert([finalResponses]);
         if (error) throw error;
         toast({
           title: "Health check submitted!",
@@ -128,42 +156,71 @@ const Index = () => {
       });
     }
   };
-  return <div className="min-h-screen bg-secondary">
+
+  return (
+    <div className="min-h-screen bg-secondary dark:bg-darkBlue-DEFAULT transition-colors duration-200">
       <div className="bg-darkBlue-DEFAULT text-white py-4 px-8 shadow-md mb-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <img src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" alt="SmartShift Logo" className="h-12 mr-4" />
             <h1 className="text-2xl font-bold">Team Health Check</h1>
           </div>
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="text-white hover:bg-darkBlue-light">
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto p-6 space-y-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-2 text-darkBlue-DEFAULT">How are we doing this week?</h2>
-          <p className="text-gray-600">Let us know with some fun reactions! 😊</p>
+          <h2 className="text-3xl font-bold mb-2 text-darkBlue-DEFAULT dark:text-white">How are we doing this week?</h2>
+          <p className="text-gray-600 dark:text-gray-300">Let us know with some fun reactions! 😊</p>
         </div>
 
         <div className="grid gap-8">
           <div className="animate-scale-in">
-            <Input type="text" placeholder="Enter your name" value={name} onChange={e => setName(e.target.value)} className="max-w-md mx-auto border-primary focus-visible:ring-primary" />
+            <Input 
+              type="text" 
+              placeholder="Enter your name" 
+              value={name} 
+              onChange={e => setName(e.target.value)} 
+              className="max-w-md mx-auto border-primary focus-visible:ring-primary dark:bg-darkBlue-light dark:text-white" 
+            />
           </div>
 
-          <HealthCheckCard title="How are you feeling this week?" description="Share your overall mood and energy level with the team" onSelect={(mood, value) => handleResponse('morale', mood, value)} />
+          <HealthCheckCard 
+            title="How are you feeling this week?" 
+            description="Share your overall mood and energy level with the team" 
+            onSelect={(mood, value) => handleResponse('morale', mood, value)} 
+          />
           
-          <HealthCheckCard title="Communication" description="How well are we communicating?" onSelect={(mood, value) => handleResponse('communication', mood, value)} />
+          <HealthCheckCard 
+            title="Communication" 
+            description="How well are we communicating?" 
+            onSelect={(mood, value) => handleResponse('communication', mood, value)} 
+          />
           
-          <HealthCheckCard title="Productivity" description="How productive do you feel?" onSelect={(mood, value) => handleResponse('productivity', mood, value)} />
+          <HealthCheckCard 
+            title="Productivity" 
+            description="How productive do you feel?" 
+            onSelect={(mood, value) => handleResponse('productivity', mood, value)} 
+          />
 
           <Comments onCommentChange={handleCommentChange} />
 
           <div className="text-center">
-            <Button size="lg" onClick={handleSubmit} className="px-8 bg-primary hover:bg-primary-dark text-white">
+            <Button 
+              size="lg" 
+              onClick={handleSubmit} 
+              className="px-8 bg-primary hover:bg-primary-dark text-white"
+            >
               Submit Health Check
             </Button>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
