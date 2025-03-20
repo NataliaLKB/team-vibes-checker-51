@@ -154,8 +154,8 @@ const Index = () => {
     }
   };
 
-  return <div className="min-h-screen bg-background text-foreground">
-      <div className={`${theme === 'light' ? 'bg-[#F1F1F1]' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
+  return <div className="min-h-screen bg-[#f5f4f5] text-foreground">
+      <div className={`${theme === 'light' ? 'bg-white' : 'bg-darkBlue-DEFAULT dark:bg-gray-900'} text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8`}>
         <div className="max-w-6xl mx-auto flex items-center">
           <div className="flex-1">
             <img 
