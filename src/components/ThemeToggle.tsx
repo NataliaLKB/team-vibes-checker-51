@@ -36,11 +36,11 @@ export function ThemeToggle() {
       variant="ghost" 
       size="icon" 
       onClick={toggleTheme}
-      className="theme-toggle"
+      className={`theme-toggle ${theme === 'light' ? 'bg-primary/10 hover:bg-primary/20 border border-primary/20' : ''}`}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? (
-        <Moon className="h-5 w-5" />
+        <Moon className="h-5 w-5 text-primary dark:text-slate-200" />
       ) : (
         <Sun className="h-5 w-5" />
       )}
