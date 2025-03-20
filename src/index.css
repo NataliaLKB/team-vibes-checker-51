@@ -120,12 +120,11 @@
   transform: scale(1.05);
 }
 
-/* Dark blue theme specific styles */
+/* Light theme specific styles (replaced dark blue theme) */
 .dark-blue-theme {
-  @apply bg-darkBlue-DEFAULT text-white;
+  @apply bg-white text-gray-800;
 }
 
 .dark-blue-card {
-  @apply bg-darkBlue-light border-primary-light;
+  @apply bg-gray-50 border-gray-200;
 }
-
