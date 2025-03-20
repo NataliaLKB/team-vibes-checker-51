@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthCheckCard from '@/components/HealthCheckCard';
 import { Comments } from '@/components/Comments';
@@ -8,10 +8,12 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Json } from '@/integrations/supabase/types';
 import { ThemeToggle } from '@/components/ThemeToggle';
+
 interface HealthCheckResponse {
   mood: string;
   value: number;
 }
+
 interface Responses {
   name: string;
   morale: HealthCheckResponse;
@@ -19,9 +21,11 @@ interface Responses {
   productivity: HealthCheckResponse;
   why: string;
 }
+
 const Index = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [responses, setResponses] = useState<Responses>({
     name: '',
     morale: {
@@ -38,9 +42,26 @@ const Index = () => {
     },
     why: ''
   });
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains('dark');
+    setTheme(isDark ? 'dark' : 'light');
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isDarkNow = document.documentElement.classList.contains('dark');
+          setTheme(isDarkNow ? 'dark' : 'light');
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    
+    return () => observer.disconnect();
+  }, []);
+
   const handleResponse = (category: 'morale' | 'communication' | 'productivity', mood: string, value: number) => {
     setResponses(prev => ({
       ...prev,
@@ -50,12 +71,14 @@ const Index = () => {
       }
     }));
   };
+
   const handleCommentChange = (comment: string) => {
     setResponses(prev => ({
       ...prev,
       why: comment
     }));
   };
+
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
@@ -129,11 +152,24 @@ const Index = () => {
       });
     }
   };
+
   return <div className="min-h-screen bg-background text-foreground">
       <div className="bg-darkBlue-DEFAULT dark:bg-gray-900 text-white py-4 px-8 shadow-md dark:shadow-black/30 mb-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <img src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" alt="SmartShift Logo" className="h-12 mr-4" />
+            {theme === 'light' ? (
+              <img 
+                src="/lovable-uploads/352e81ae-5980-4f8b-92f4-fb1969f789a2.png" 
+                alt="SmartShift Logo" 
+                className="h-8 mr-4" 
+              />
+            ) : (
+              <img 
+                src="/lovable-uploads/9b33ff5c-e5b2-46c3-9ec8-9d7f38e6cfa3.png" 
+                alt="SmartShift Logo" 
+                className="h-8 mr-4" 
+              />
+            )}
             <h1 className="text-2xl font-bold">Team Health Check</h1>
           </div>
           <ThemeToggle />
@@ -168,4 +204,5 @@ const Index = () => {
       </div>
     </div>;
 };
+
 export default Index;
